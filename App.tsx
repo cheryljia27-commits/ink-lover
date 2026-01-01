@@ -6,6 +6,7 @@ import Shelf from './components/Shelf';
 import Statistics from './components/Statistics';
 import Management from './components/Management';
 import InkBottle from './components/InkBottle';
+import SyncCenter from './components/SyncCenter';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ViewType>('shelf');
@@ -18,9 +19,13 @@ const App: React.FC = () => {
   // Notification state
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-  useEffect(() => {
+  const refreshData = () => {
     setInks(storageService.getInks());
     setRecords(storageService.getRecords());
+  };
+
+  useEffect(() => {
+    refreshData();
   }, []);
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
@@ -98,6 +103,10 @@ const App: React.FC = () => {
     <div className="min-h-screen pb-20">
       {/* Header */}
       <header className="bg-white/50 backdrop-blur-md border-b-2 border-[#c9a66b] py-8 text-center sticky top-0 z-30 shadow-sm">
+        <div className="absolute top-2 right-4 flex items-center gap-1.5 px-3 py-1 bg-green-50 rounded-full border border-green-200">
+           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+           <span className="text-[10px] font-bold text-green-700 tracking-tighter">DATA SECURE</span>
+        </div>
         <h1 className="font-header text-4xl md:text-5xl text-[#2c1810] flex items-center justify-center gap-3">
           <span className="text-[#c9a66b]">✒️</span> 墨色乾坤
         </h1>
@@ -112,6 +121,7 @@ const App: React.FC = () => {
             { id: 'refill', label: '上墨记录', icon: '💧' },
             { id: 'stats', label: '数据统计', icon: '📊' },
             { id: 'manage', label: '管理库', icon: '⚙️' },
+            { id: 'sync', label: '同步中心', icon: '☁️' },
           ].map(tab => (
             <button
               key={tab.id}
@@ -253,6 +263,12 @@ const App: React.FC = () => {
           {activeTab === 'manage' && (
             <section className="animate-in fade-in duration-500">
               <Management inks={inks} onAdd={handleAddInk} onUpdate={handleUpdateInk} onDelete={handleDeleteInk} />
+            </section>
+          )}
+
+          {activeTab === 'sync' && (
+            <section>
+              <SyncCenter onDataRefresh={refreshData} showToast={showToast} />
             </section>
           )}
         </div>

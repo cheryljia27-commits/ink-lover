@@ -18,4 +18,11 @@ export interface UsageRecord {
   createdAt: string;
 }
 
-export type ViewType = 'shelf' | 'refill' | 'stats' | 'manage';
+export interface AppData {
+  inks: Ink[];
+  records: UsageRecord[];
+  version: string;
+  exportedAt: string;
+}
+
+export type ViewType = 'shelf' | 'refill' | 'stats' | 'manage' | 'sync';
