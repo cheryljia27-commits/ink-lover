@@ -11,6 +11,7 @@ interface ManagementProps {
 
 const Management: React.FC<ManagementProps> = ({ inks, onAdd, onUpdate, onDelete }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
+  const editingInk = editingId ? inks.find(i => i.id === editingId) : null;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,14 +49,14 @@ const Management: React.FC<ManagementProps> = ({ inks, onAdd, onUpdate, onDelete
           <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
             <span>{editingId ? '✍️' : '➕'}</span> {editingId ? '编辑墨水' : '添加新墨水'}
           </h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form key={editingId ?? 'new'} onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-gray-500 mb-1">墨水名称</label>
               <input 
                 name="name" 
                 type="text" 
                 placeholder="例如：极光蓝" 
-                defaultValue={editingId ? inks.find(i => i.id === editingId)?.name : ''}
+                defaultValue={editingInk?.name || ''}
                 className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#c9a66b] outline-none" 
                 required 
               />
@@ -66,7 +67,7 @@ const Management: React.FC<ManagementProps> = ({ inks, onAdd, onUpdate, onDelete
                 name="brand" 
                 type="text" 
                 placeholder="例如：百利金" 
-                defaultValue={editingId ? inks.find(i => i.id === editingId)?.brand : ''}
+                defaultValue={editingInk?.brand || ''}
                 className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#c9a66b] outline-none" 
                 required 
               />
@@ -76,7 +77,7 @@ const Management: React.FC<ManagementProps> = ({ inks, onAdd, onUpdate, onDelete
               <input 
                 name="color" 
                 type="color" 
-                defaultValue={editingId ? inks.find(i => i.id === editingId)?.color : '#1a5276'}
+                defaultValue={editingInk?.color || '#1a5276'}
                 className="w-full h-12 p-1 rounded-xl border border-gray-300 cursor-pointer" 
               />
             </div>
@@ -87,7 +88,7 @@ const Management: React.FC<ManagementProps> = ({ inks, onAdd, onUpdate, onDelete
                   name="capacity" 
                   type="number" 
                   step="0.1" 
-                  defaultValue={editingId ? inks.find(i => i.id === editingId)?.capacity : '50'}
+                  defaultValue={editingInk?.capacity || '50'}
                   className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#c9a66b] outline-none" 
                   required 
                 />
@@ -98,7 +99,7 @@ const Management: React.FC<ManagementProps> = ({ inks, onAdd, onUpdate, onDelete
                   name="remaining" 
                   type="number" 
                   step="0.1" 
-                  defaultValue={editingId ? inks.find(i => i.id === editingId)?.remaining : '50'}
+                  defaultValue={editingInk?.remaining || '50'}
                   className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#c9a66b] outline-none" 
                   required 
                 />
