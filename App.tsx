@@ -9,12 +9,12 @@ import InkBottle from './components/InkBottle';
 import SyncCenter from './components/SyncCenter';
 
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<ViewType>('shelf');
+  const [activeTab, setActiveTab] = useState<ViewType>(() => storageService.getSettings().activeTab);
   const [inks, setInks] = useState<Ink[]>([]);
   const [records, setRecords] = useState<UsageRecord[]>([]);
   const [selectedInk, setSelectedInk] = useState<Ink | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [brandFilter, setBrandFilter] = useState('');
+  const [searchTerm, setSearchTerm] = useState(() => storageService.getSettings().searchTerm);
+  const [brandFilter, setBrandFilter] = useState(() => storageService.getSettings().brandFilter);
 
   // Notification state
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -22,11 +22,23 @@ const App: React.FC = () => {
   const refreshData = () => {
     setInks(storageService.getInks());
     setRecords(storageService.getRecords());
+    const settings = storageService.getSettings();
+    setActiveTab(settings.activeTab);
+    setSearchTerm(settings.searchTerm);
+    setBrandFilter(settings.brandFilter);
   };
 
   useEffect(() => {
     refreshData();
   }, []);
+
+  useEffect(() => {
+    storageService.saveSettings({
+      activeTab,
+      searchTerm,
+      brandFilter
+    });
+  }, [activeTab, searchTerm, brandFilter]);
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type });

@@ -23,6 +23,13 @@ export interface AppData {
   records: UsageRecord[];
   version: string;
   exportedAt: string;
+  settings?: AppSettings;
+}
+
+export interface AppSettings {
+  activeTab: ViewType;
+  searchTerm: string;
+  brandFilter: string;
 }
 
 export type ViewType = 'shelf' | 'refill' | 'stats' | 'manage' | 'sync';
